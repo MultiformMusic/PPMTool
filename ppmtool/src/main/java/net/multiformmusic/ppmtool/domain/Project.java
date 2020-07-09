@@ -27,6 +27,7 @@ public class Project {
     private Date end_date;
 
     @JsonFormat(pattern = "yyyy-mm-dd")
+    @Column(updatable = false)
     private Date created_At;
     @JsonFormat(pattern = "yyyy-mm-dd")
     private Date updated_At;
@@ -42,7 +43,7 @@ public class Project {
 
     @PreUpdate
     protected void onUpdate() {
-        this.end_date = new Date();
+        this.updated_At = new Date();
     }
 
     public Long getId() {
