@@ -4,6 +4,7 @@ import net.multiformmusic.ppmtool.domain.Backlog;
 import net.multiformmusic.ppmtool.domain.Project;
 import net.multiformmusic.ppmtool.domain.User;
 import net.multiformmusic.ppmtool.exceptions.ProjectIdException;
+import net.multiformmusic.ppmtool.exceptions.ProjectNotFoundException;
 import net.multiformmusic.ppmtool.repositories.BacklogRepository;
 import net.multiformmusic.ppmtool.repositories.ProjectRepository;
 import net.multiformmusic.ppmtool.repositories.UserRepository;
@@ -26,6 +27,15 @@ public class ProjectService {
 
         try {
 
+            if (project.getId() != null) {
+                Project existingProject = projectRepository.findByProjectIdentifier((project.getProjectIdentifier()));
+                if (existingProject != null && !existingProject.getProjectLeader().equals(username)) {
+                    throw new ProjectNotFoundException("Porject not found in your account");
+                } else if (existingProject == null) {
+                    throw new ProjectNotFoundException("Project with ID : '" + project.getProjectIdentifier() + "' cannot be updated because it does not exist.");
+                }
+            }
+
             User user = userRepository.findByUsername(username);
             project.setUser(user);
             project.setProjectLeader(user.getUsername());
@@ -45,13 +55,15 @@ public class ProjectService {
 
             return projectRepository.save(project);
 
+        } catch (ProjectNotFoundException pne) {
+            throw new ProjectNotFoundException(pne.getMessage());
         } catch (Exception ex) {
             throw new ProjectIdException("Project ID " + project.getProjectIdentifier() + " already exists");
         }
 
     }
 
-    public Project findProjectByIdentifier(String projectId) {
+    public Project findProjectByIdentifier(String projectId, String username) {
 
         Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
 
@@ -59,21 +71,25 @@ public class ProjectService {
             throw new ProjectIdException("Project ID " + projectId+ " does not exist");
         }
 
+        if (!project.getProjectLeader().equals(username)) {
+            throw  new ProjectNotFoundException(("Project not found in your account"));
+        }
+
         return project;
     }
 
-    public Iterable<Project> findAllProjects() {
-        return projectRepository.findAll();
+    public Iterable<Project> findAllProjects(String username) {
+        return projectRepository.findAllByProjectLeader(username);
     }
 
-    public void deleteProjectByIdentifier(String projectId) {
+    public void deleteProjectByIdentifier(String projectId, String username) {
 
-        Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
+        /*Project project = projectRepository.findByProjectIdentifier(projectId.toUpperCase());
 
         if (project == null) {
             throw new ProjectIdException("Cannot delete Project with ID " + projectId);
-        }
+        }*/
 
-        projectRepository.delete(project);
+        projectRepository.delete(findProjectByIdentifier(projectId, username));
     }
 }
