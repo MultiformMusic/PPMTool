@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
 import { getProject, createProject } from '../../actions/projectActions';
+import { convertDateFromBase, convertDateToBase } from '../../utils/utils';
 
 class UpdateProject extends Component {
 
@@ -35,7 +36,7 @@ class UpdateProject extends Component {
 
         const {id, projectName, projectIdentifier, description, start_date, end_date} = nextProps.project;
 
-        this.setState({id, projectName, projectIdentifier, description, start_date, end_date});
+        this.setState({id, projectName, projectIdentifier, description, start_date: convertDateFromBase(start_date), end_date: convertDateFromBase(end_date)});
     }
 
     /*static getDerivedStateFromProps(nextProps, prevState) {
@@ -66,8 +67,8 @@ class UpdateProject extends Component {
             projectName: this.state.projectName,
             projectIdentifier: this.state.projectIdentifier,
             description: this.state.description,
-            start_date: this.state.start_date,
-            end_date: this.state.end_date
+            start_date: convertDateToBase(this.state.start_date),
+            end_date: convertDateToBase(this.state.end_date)
         }
 
 
@@ -77,6 +78,7 @@ class UpdateProject extends Component {
     render() {
 
         const {errors} = this.state;
+        console.log(this.state)
         
         return (
             <div className="project">

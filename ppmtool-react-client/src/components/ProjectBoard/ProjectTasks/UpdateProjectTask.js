@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { getProjectTask, updateProjectTask } from '../../../actions/backlogActions';
 import classnames from 'classnames';
 import { PropTypes } from 'prop-types';
+import { convertDateToBase, convertDateFromBase } from '../../../utils/utils';
 
 class UpdateProjectTask extends Component {
 
@@ -18,7 +19,7 @@ class UpdateProjectTask extends Component {
             acceptanceCriteria: "",
             status: "",
             priority: "",
-            dueDate: null,
+            dueDate: "",
             projectIdentifier: "",
             create_At: "",
             errors: {}
@@ -56,9 +57,9 @@ class UpdateProjectTask extends Component {
             acceptanceCriteria,
             status,
             priority,
-            dueDate,
+            dueDate: convertDateFromBase(dueDate),
             projectIdentifier,
-            create_At  });
+            create_At: convertDateFromBase(create_At) });
     }
 
     onChange = event => {
@@ -77,10 +78,11 @@ class UpdateProjectTask extends Component {
             acceptanceCriteria: this.state.acceptanceCriteria,
             status: this.state.status,
             priority: this.state.priority,
-            dueDate: this.state.dueDate,
+            dueDate: convertDateToBase(this.state.dueDate),
             projectIdentifier: this.state.projectIdentifier,
-            create_At: this.state.create_At
+            create_At: convertDateToBase(this.state.create_At)
         }
+
 
         this.props.updateProjectTask(this.state.projectIdentifier, this.state.projectSequence, updatedProjectTask, this.props.history);
     }

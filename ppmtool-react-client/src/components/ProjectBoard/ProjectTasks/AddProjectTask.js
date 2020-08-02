@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import classnames from 'classnames';
 import { addProjectTask } from '../../../actions/backlogActions';
 import { PropTypes } from 'prop-types';
+import { convertDateToBase } from '../../../utils/utils';
 
 class AddProjectTask extends Component {
 
@@ -44,10 +45,10 @@ class AddProjectTask extends Component {
             acceptanceCriteria: this.state.acceptanceCriteria,
             status: this.state.status,
             priority: this.state.priority,
-            dueDate: this.state.dueDate,
+            dueDate: convertDateToBase(this.state.dueDate)
         }
 
-        console.log(newTask);
+        //console.log("newTask = " + newTask);
 
         this.props.addProjectTask(this.state.projectIdentifier, newTask, this.props.history);
     }

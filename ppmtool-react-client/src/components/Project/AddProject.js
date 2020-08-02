@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createProject } from '../../actions/projectActions';
 import classnames from 'classnames';
+import { convertDateToBase } from '../../utils/utils';
 
 class AddProject extends Component {
 
@@ -48,11 +49,11 @@ class AddProject extends Component {
             description: this.state.description,
             projectName: this.state.projectName,
             projectIdentifier: this.state.projectIdentifier,
-            start_date: this.state.start_date,
-            end_date: this.state.end_date
+            start_date: convertDateToBase(this.state.start_date),
+            end_date: convertDateToBase(this.state.end_date)
         }
 
-        console.log(newProject);
+        //console.log(newProject);
 
         this.props.createProject(newProject, this.props.history);
     }
