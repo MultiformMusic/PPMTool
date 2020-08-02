@@ -1,5 +1,6 @@
 package net.multiformmusic.ppmtool.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ public class ProjectTask {
     private String acceptanceCriteria;
     private String status;
     private Integer priority;
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date dueDate;
 
     // manyToOne with backlog
@@ -26,7 +28,9 @@ public class ProjectTask {
     @Column(updatable = false)
     private String projectIdentifier;
 
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date create_At;
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date update_At;
 
     @ManyToOne(fetch = FetchType.EAGER)
